@@ -2,6 +2,7 @@
 using IPA.Config.Stores;
 using IPA.Loader;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using IpaLogger = IPA.Logging.Logger;
 using IpaConfig = IPA.Config.Config;
 
@@ -23,7 +24,7 @@ internal class Plugin
         // Creates an instance of PluginConfig used by IPA to load and store config values
         Config = ipaConfig.Generated<PluginConfig>();
 
-        Log.Info($"{pluginMetadata.Name} {pluginMetadata.HVersion} initialized.");
+        Log.Info($"{pluginMetadata.Name} {pluginMetadata.HVersion} initialized!");
     }
 
     [OnStart]
@@ -31,11 +32,28 @@ internal class Plugin
     {
         Log.Debug("OnApplicationStart");
         new GameObject("Tweaks67Controller").AddComponent<Tweaks67Controller>();
+        SceneManager.sceneLoaded += OnSceneChanged;
+    }
+
+    private static void OnSceneChanged(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainMenu")
+        {
+            PluginConfig.dustPS();
+            PluginConfig.logo();
+        }
+
+        if (scene.name == "GameCore")
+        {
+            PluginConfig.dustPSGameCore();
+            PluginConfig.GradientBackground();
+        }
     }
 
     [OnExit]
     public void OnApplicationQuit()
     {
         Log.Debug("OnApplicationQuit");
+        SceneManager.sceneLoaded -= OnSceneChanged;
     }
 }

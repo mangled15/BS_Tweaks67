@@ -1,0 +1,17 @@
+<settings-scroll-view xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    <horizontal background="panel-top">
+        <vertical>
+            <text text="Settings" font-size="8" bold="true" size-delta-y="9" font-align="Center"/>
+        </vertical>
+    </horizontal>
+    
+    <text text="Global" bold="true" italics="true" font-size="6" size-delta-y="9"/>
+    <toggle-setting text="World dust particles enabled" value="dustValue" apply-on-change="true"/>
+    
+    <text text="Menu" bold="true" italics="true" font-size="6" size-delta-y="9"/>
+    <toggle-setting text="Beat Saber logo enabled" value="logoValue" apply-on-change="true"/>
+    
+    <text text="Gameplay" bold="true" italics="true" font-size="6" size-delta-y="9"/>
+    <toggle-setting text="GradientBackground enabled" value="gradientValue" apply-on-change="true"/>
+    <toggle-setting text="Cut particles enabled" value="particleValue" apply-on-change="true"/>
+</settings-scroll-view>

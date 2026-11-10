@@ -1,5 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Linq;
+using System.Runtime.CompilerServices;
 using IPA.Config.Stores;
+using UnityEngine;
 
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
 
@@ -30,4 +32,70 @@ internal class PluginConfig
     /// </summary>
     public virtual void CopyFrom(PluginConfig other) { }
     */
+
+    public virtual bool DustEnabled { get; set; } = true;
+    public virtual bool GradientBackgroundEnabled { get; set; } = true;
+    public virtual bool LogoEnabled { get; set; } = true;
+
+    public static void dustPS()
+    {
+        var dustPS = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "DustPS");
+        if (dustPS != null)
+        {
+            dustPS.SetActive(Plugin.Config.DustEnabled);
+        }
+        else
+        {
+            //Plugin.Log.Notice("DustPS not found!");
+        }
+    }
+    
+    public static void dustPSGameCore()
+    {
+        var dustPS = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "DustPS" && go.transform.parent.name == "Environment");
+        if (dustPS != null)
+        {
+            dustPS.SetActive(Plugin.Config.DustEnabled);
+        }
+        else
+        {
+            //Plugin.Log.Notice("DustPS not found!");
+        }
+    }
+
+    public static void GradientBackground()
+    {
+        var gradientBackground = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GradientBackground");
+        if (gradientBackground != null)
+        {
+            gradientBackground.SetActive(Plugin.Config.GradientBackgroundEnabled);
+        }
+        else
+        {
+            //Plugin.Log.Notice("GradientBackground not found!");
+        }
+    }
+
+    public static void logo()
+    {
+        var logo = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "Logo");
+        var line = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GlowLines");
+        var line1 = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GlowLines (1)");
+        if (logo != null && line != null && line1 != null)
+        {
+            logo.SetActive(Plugin.Config.LogoEnabled);
+            line.SetActive(Plugin.Config.LogoEnabled);
+            line1.SetActive(Plugin.Config.LogoEnabled);
+        }
+        else
+        {
+            //Plugin.Log.Notice("logo not found!");
+        }
+    }
+
+    public virtual void Changed()
+    {
+        dustPS();
+        logo();
+    }
 }
