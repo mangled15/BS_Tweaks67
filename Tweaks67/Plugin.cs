@@ -23,8 +23,6 @@ internal class Plugin
         Log = ipaLogger;
         // Creates an instance of PluginConfig used by IPA to load and store config values
         Config = ipaConfig.Generated<PluginConfig>();
-
-        Log.Info($"{pluginMetadata.Name} {pluginMetadata.HVersion} initialized!");
     }
 
     [OnStart]
@@ -39,8 +37,27 @@ internal class Plugin
     {
         if (scene.name == "MainMenu")
         {
-            PluginConfig.dustPS();
-            PluginConfig.logo();
+            if (!Config.DustEnabled)
+            {
+                PluginConfig.dustPS();
+            }
+
+            if (!Config.LogoEnabled)
+            {
+                PluginConfig.logo();
+            }
+            
+            if (Config.DefaultLogoColorsEnabled)
+            {
+                PluginConfig.defaultLogoColors();
+                return;
+            }
+
+            if (!Config.DefaultLogoColorsEnabled)
+            {
+                PluginConfig.BeatLogoColorChange();
+                PluginConfig.SaberLogoColorChange();
+            }
         }
 
         if (scene.name == "GameCore")

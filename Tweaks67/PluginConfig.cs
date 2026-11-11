@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Runtime.CompilerServices;
 using IPA.Config.Stores;
+using IPA.Utilities;
 using UnityEngine;
 
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
@@ -32,11 +33,19 @@ internal class PluginConfig
     /// </summary>
     public virtual void CopyFrom(PluginConfig other) { }
     */
-
+    
+    // Global stuff
     public virtual bool DustEnabled { get; set; } = true;
-    public virtual bool GradientBackgroundEnabled { get; set; } = true;
+    // Menu
     public virtual bool LogoEnabled { get; set; } = true;
+    public virtual Color BeatLogoColor { get; set; } = new Color(1,0,0,1);
+    public virtual Color SaberLogoColor { get; set; } =  new Color(0, 0.6588235f, 1, 1);
+    public virtual bool DefaultLogoColorsEnabled { get; set; } = true;
+    // Gameplay
+    public virtual bool GradientBackgroundEnabled { get; set; } = true;
+    public virtual bool CutParticleEnabled { get; set; } = true;
 
+    // global
     public static void dustPS()
     {
         var dustPS = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "DustPS");
@@ -46,10 +55,11 @@ internal class PluginConfig
         }
         else
         {
-            //Plugin.Log.Notice("DustPS not found!");
+            Plugin.Log.Notice("DustPS not found!");
         }
     }
     
+    // gameplay
     public static void dustPSGameCore()
     {
         var dustPS = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "DustPS" && go.transform.parent.name == "Environment");
@@ -59,7 +69,7 @@ internal class PluginConfig
         }
         else
         {
-            //Plugin.Log.Notice("DustPS not found!");
+            Plugin.Log.Notice("DustPS not found!");
         }
     }
 
@@ -72,30 +82,144 @@ internal class PluginConfig
         }
         else
         {
-            //Plugin.Log.Notice("GradientBackground not found!");
+            Plugin.Log.Notice("GradientBackground not found!");
         }
     }
 
+    // menu
     public static void logo()
     {
-        var logo = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "Logo");
+       var gameLogo = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "Logo" && go.transform.parent.name == "DefaultMenuEnvironment");
+
         var line = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GlowLines");
         var line1 = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GlowLines (1)");
-        if (logo != null && line != null && line1 != null)
+        if (gameLogo != null && line != null && line1 != null)
         {
-            logo.SetActive(Plugin.Config.LogoEnabled);
+            gameLogo.SetActive(Plugin.Config.LogoEnabled);
             line.SetActive(Plugin.Config.LogoEnabled);
             line1.SetActive(Plugin.Config.LogoEnabled);
         }
         else
         {
-            //Plugin.Log.Notice("logo not found!");
+            Plugin.Log.Notice("logo not found!");
         }
     }
 
+    public static void BeatLogoColorChange()
+    {
+        var beatColor = Plugin.Config?.BeatLogoColor ?? new Color(0f,0f,0f,0f);
+        
+        var batLogo = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "BatLogo");
+        var logoE = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "LogoE");
+        var EFlickering = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "EFlickering");
+        var line = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GlowLines");
+        if (batLogo != null && logoE != null && EFlickering != null && line != null)
+        {
+            batLogo.GetComponent<SpriteRenderer>().color = beatColor;
+            logoE.GetComponent<SpriteRenderer>().color = beatColor;
+            EFlickering.GetComponent<FlickeringNeonSign>().SetField("_spriteOnColor", beatColor);
+            EFlickering.GetComponent<FlickeringNeonSign>().SetField("_lightOnColor", beatColor);
+
+            line.GetComponent<SpriteRenderer>().color = new Color(beatColor.r, beatColor.g, beatColor.b, 0.2352941f);
+        }
+        
+        var b = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "BNeon");
+        var e = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "ENeon");
+        var a = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "ANeon");
+        var t = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "TNeon");
+
+        if (b == null || e == null || a == null || t == null) return;
+        
+        b.GetComponent<TubeBloomPrePassLight>().color = beatColor;
+        e.GetComponent<TubeBloomPrePassLight>().color = beatColor;
+        a.GetComponent<TubeBloomPrePassLight>().color = beatColor;
+        t.GetComponent<TubeBloomPrePassLight>().color = beatColor;
+    }
+
+    public static void SaberLogoColorChange()
+    {
+        var saberColor = Plugin.Config?.SaberLogoColor ?? new Color(0f,0f,0f,0f);
+        
+        var saber = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "SaberLogo");
+        var saberNeon = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "SaberNeon");
+        var line = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GlowLines (1)");
+        if (saber != null && saberNeon != null && line != null)
+        {
+            saber.GetComponent<SpriteRenderer>().color = saberColor;
+            saberNeon.GetComponent<TubeBloomPrePassLight>().color = saberColor;
+            line.GetComponent<SpriteRenderer>().color = new Color(saberColor.r, saberColor.g, saberColor.b, 0.2352941f);
+        }
+    }
+
+    private readonly static Color defaultBeatColor = new Color(1,0,0,1);
+    private readonly static Color defaultSaberColor = new Color(0, 0.6588235f, 1, 1);
+    public static void defaultLogoColors()
+    {
+        // saber logo
+        var saber = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "SaberLogo");
+        var saberNeon = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "SaberNeon");
+        var line = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GlowLines (1)");
+        if (saber != null && saberNeon != null && line != null)
+        {
+            saber.GetComponent<SpriteRenderer>().color = defaultSaberColor;
+            saberNeon.GetComponent<TubeBloomPrePassLight>().color = defaultSaberColor;
+            // idk why beat saber's alpha for the glowlines is so specific lolol
+            line.GetComponent<SpriteRenderer>().color = new Color(defaultSaberColor.r, defaultSaberColor.g, defaultSaberColor.b, 0.2352941f);
+        }
+        
+        // beat logo (pain)
+        var batLogo = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "BatLogo");
+        var logoE = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "LogoE");
+        var EFlickering = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "EFlickering");
+        var line1 = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GlowLines");
+        if (batLogo != null && logoE != null && EFlickering != null && line1 != null)
+        {
+            batLogo.GetComponent<SpriteRenderer>().color = defaultBeatColor;
+            logoE.GetComponent<SpriteRenderer>().color = defaultBeatColor;
+            EFlickering.GetComponent<FlickeringNeonSign>().SetField("_spriteOnColor", defaultBeatColor);
+            EFlickering.GetComponent<FlickeringNeonSign>().SetField("_lightOnColor", defaultBeatColor);
+
+            // idk why beat saber's alpha for the glowlines is so specific lolol
+            line1.GetComponent<SpriteRenderer>().color = new Color(defaultBeatColor.r, defaultBeatColor.g, defaultBeatColor.b, 0.2352941f); 
+        }
+        
+        var b = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "BNeon");
+        var e = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "ENeon");
+        var a = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "ANeon");
+        var t = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "TNeon");
+
+        if (b == null || e == null || a == null || t == null) return;
+
+        b.GetComponent<TubeBloomPrePassLight>().color = defaultBeatColor;
+        e.GetComponent<TubeBloomPrePassLight>().color = defaultBeatColor;
+        a.GetComponent<TubeBloomPrePassLight>().color = defaultBeatColor;
+        t.GetComponent<TubeBloomPrePassLight>().color = defaultBeatColor;
+    }
+
+    private int cursedFixMaybe = 0;
     public virtual void Changed()
     {
+        if (cursedFixMaybe == 0)
+        {
+            cursedFixMaybe += 1;
+            return;
+        }
+        
         dustPS();
         logo();
+        
+        if (DefaultLogoColorsEnabled)
+        {
+            defaultLogoColors();
+            cursedFixMaybe += 1;
+            return;
+        }
+        
+        if (!DefaultLogoColorsEnabled)
+        {
+            BeatLogoColorChange();
+            SaberLogoColorChange();
+        }
+        cursedFixMaybe += 1;
     }
 }

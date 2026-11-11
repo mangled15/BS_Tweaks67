@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using BeatSaberMarkupLanguage.Attributes;
 using HMUI;
 using TMPro;
@@ -12,7 +13,7 @@ internal class MenuSettings : MonoBehaviour
     [UIAction("#post-parse")]
     private void PostParse()
     {
-        Plugin.Log.Debug($"{name} parsed!");
+        Plugin.Log.Debug($"{name} parsed!!");
     }
 
     [UIValue("dustValue")]
@@ -23,16 +24,45 @@ internal class MenuSettings : MonoBehaviour
     }
     
     [UIValue("gradientValue")]
-    public bool gradientValue
+    private bool gradientValue
     {
         get => Plugin.Config.GradientBackgroundEnabled;
         set => Plugin.Config.GradientBackgroundEnabled = value;
     }
     
     [UIValue("logoValue")]
-    public bool logoValue
+    private bool logoValue
     {
         get => Plugin.Config.LogoEnabled;
         set => Plugin.Config.LogoEnabled = value;
     }
+
+    [UIValue("particleValue")]
+    private bool particleValue
+    {
+        get => Plugin.Config.CutParticleEnabled;
+        set => Plugin.Config.CutParticleEnabled = value;
+    }
+
+    [UIValue("beatColor")]
+    private Color beatColor
+    {
+        get => Plugin.Config.BeatLogoColor;
+        set => Plugin.Config.BeatLogoColor = value;
+    }
+
+    [UIValue("saberColor")]
+    private Color saberColor
+    {
+        get => Plugin.Config.SaberLogoColor;
+        set => Plugin.Config.SaberLogoColor = value;
+    }
+
+    [UIValue("defaultLogoColors")]
+    private bool defaultLogoColors
+    {
+        get => Plugin.Config.DefaultLogoColorsEnabled;
+        set => Plugin.Config.DefaultLogoColorsEnabled = value;
+    }
+    
 }
