@@ -59,32 +59,6 @@ internal class PluginConfig
         }
     }
     
-    // gameplay
-    public static void dustPSGameCore()
-    {
-        var dustPS = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "DustPS" && go.transform.parent.name == "Environment");
-        if (dustPS != null)
-        {
-            dustPS.SetActive(Plugin.Config.DustEnabled);
-        }
-        else
-        {
-            Plugin.Log.Notice("DustPS not found!");
-        }
-    }
-
-    public static void GradientBackground()
-    {
-        var gradientBackground = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GradientBackground");
-        if (gradientBackground != null)
-        {
-            gradientBackground.SetActive(Plugin.Config.GradientBackgroundEnabled);
-        }
-        else
-        {
-            Plugin.Log.Notice("GradientBackground not found!");
-        }
-    }
 
     // menu
     public static void logo()
@@ -194,6 +168,44 @@ internal class PluginConfig
         e.GetComponent<TubeBloomPrePassLight>().color = defaultBeatColor;
         a.GetComponent<TubeBloomPrePassLight>().color = defaultBeatColor;
         t.GetComponent<TubeBloomPrePassLight>().color = defaultBeatColor;
+    }
+    
+    // gameplay
+    public static void dustPSGameCore()
+    {
+        var dustPS = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "DustPS" && go.transform.parent.name == "Environment");
+        if (dustPS != null)
+        {
+            dustPS.SetActive(Plugin.Config.DustEnabled);
+        }
+        else
+        {
+            Plugin.Log.Notice("DustPS not found!");
+        }
+    }
+    
+    public static void GradientBackground()
+    {
+        var gradientBackground = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "GradientBackground");
+        if (gradientBackground != null)
+        {
+            gradientBackground.SetActive(Plugin.Config.GradientBackgroundEnabled);
+        }
+        else
+        {
+            Plugin.Log.Notice("GradientBackground not found!");
+        }
+    }
+
+    public static void CutParticles()
+    {
+        var directionSparkles = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "DirectionSparkles");
+        var explosionSparkles = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "ExplosionSparkles");
+        if (directionSparkles != null && explosionSparkles != null)
+        {
+            directionSparkles.SetActive(Plugin.Config.CutParticleEnabled);
+            explosionSparkles.SetActive(Plugin.Config.CutParticleEnabled);
+        }
     }
 
     private int cursedFixMaybe = 0;

@@ -64,6 +64,7 @@ internal class Plugin
         {
             PluginConfig.dustPSGameCore();
             PluginConfig.GradientBackground();
+            PluginConfig.CutParticles();
         }
     }
 

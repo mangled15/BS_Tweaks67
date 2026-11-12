@@ -23,25 +23,13 @@ internal class MenuSettings : MonoBehaviour
         set => Plugin.Config.DustEnabled = value;
     }
     
-    [UIValue("gradientValue")]
-    private bool gradientValue
-    {
-        get => Plugin.Config.GradientBackgroundEnabled;
-        set => Plugin.Config.GradientBackgroundEnabled = value;
-    }
+    
     
     [UIValue("logoValue")]
     private bool logoValue
     {
         get => Plugin.Config.LogoEnabled;
         set => Plugin.Config.LogoEnabled = value;
-    }
-
-    [UIValue("particleValue")]
-    private bool particleValue
-    {
-        get => Plugin.Config.CutParticleEnabled;
-        set => Plugin.Config.CutParticleEnabled = value;
     }
 
     [UIValue("beatColor")]
@@ -65,4 +53,17 @@ internal class MenuSettings : MonoBehaviour
         set => Plugin.Config.DefaultLogoColorsEnabled = value;
     }
     
+    [UIValue("gradientValue")]
+    private bool gradientValue
+    {
+        get => Plugin.Config.GradientBackgroundEnabled;
+        set => Plugin.Config.GradientBackgroundEnabled = value;
+    }
+    
+    [UIValue("particleValue")]
+    private bool particleValue
+    {
+        get => Plugin.Config.CutParticleEnabled;
+        set => Plugin.Config.CutParticleEnabled = value;
+    }
 }
