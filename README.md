@@ -5,9 +5,11 @@
  > [!NOTE]
  > This is my first public Beat Saber mod. Expect bugs I guess or I'm just so cracked at coding that there aren't any hehehe.
 
-Toggle random things on and off such as:
+Toggle things on and off such as:
 - Dust particles
 - Beat Saber logo
 - Gradient Background(while playing a map)
+
+And you can customize the colors of the Logo in the main menu! Set your own color for 'Beat' and 'Saber' seperatly!
 
  Other stuff coming soon
